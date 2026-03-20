@@ -1,125 +1,338 @@
-# Content Autopilot
+<h1 align="center">Content Autopilot</h1>
 
-129-skill self-evolving content OS for Claude Code — note, X, Instagram, LinkedIn, YouTube, and more.
+<p align="center">
+<strong>一度命じたら、コンテンツは自律的に生まれ続ける</strong>
+</p>
 
-**1行で**: コンテンツクリエイターの「作る→分析→改善→再活用→成長」を全自動化するプラグイン。
+<p align="center">
+<code>129 skills</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>10 Python scripts</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>3 platforms</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>Zero user intervention</code>
+</p>
 
-## Install
+<p align="center">
+Claude Code plugin for fully autonomous content creation.<br>
+トレンド調査からコンテンツ生成、品質管理、ダッシュボード出力まで——<br>
+<strong>人間が介入するのは、最初の1コマンドだけ。</strong>
+</p>
+
+---
+
+## "他のAIツールとの違い"
+
+「AIでコンテンツを作る」ツールは多い。しかし、そのほとんどは**人間がプロンプトを考え、出力を読み、判断する**ことを前提としている。Content Autopilotは違う。
+
+| | ChatGPT / Claude 直接利用 | **Content Autopilot** |
+|---|---|---|
+| **トピック選択** | ユーザーが考える | トレンド自動検索 + ファネル分析で自動決定 |
+| **品質管理** | ユーザーが読んで判断 | 6軸採点 + 自動改善ループ |
+| **マルチ展開** | プラットフォームごとに依頼 | note + X + IG を1コマンドで同時生成 |
+| **学習** | 毎回ゼロから | 履歴分析 + ファネルバランス + トレンド追跡 |
+| **品質可視化** | なし | HTMLダッシュボード自動生成 |
+
+**核心的な違い**: 従来のAIツールは「賢いアシスタント」。Content Autopilotは**自律的に判断・実行・改善するシステム**。
+
+---
+
+## パイプライン全体像
+
+`/daily-autopilot` を実行すると、以下のステップが**完全自律で**動く。
+
+```
+/daily-autopilot
+    |
+    v
+[Profile] -----> [Funnel Analysis] -----> [WebSearch]
+                                              |
+                                        auto-select topic
+                                              |
+                                              v
+                                    [Generate 3 platforms]
+                                         note / X / IG
+                                              |
+                                              v
+                                    [Quality Gate 6-axis]
+                                         |         |
+                                    score>=70   score<70
+                                         |         |
+                                         |    auto-improve
+                                         |    (max 2 rounds)
+                                         |         |
+                                         v         v
+                                    [Pre-publish Check]
+                                         8 validations
+                                              |
+                                              v
+                                    [Record + Dashboard]
+                                     HTML auto-open
+```
+
+**人間の判断が必要なポイント: ゼロ。** トピック選択もスコア改善も、すべてシステムが自律的に判断する。
+
+---
+
+## Quick Demo（審査員向け）
 
 ```bash
-/plugin marketplace add fp-sudo/agi-lab-skills-marketplace
-/plugin install content-autopilot@agi-lab-skills
+# インストール（Claude Code内で実行）
+/plugin marketplace add content-autopilot
+
+# 実行（必要なのはこれだけ）
+/daily-autopilot
+
+# あとは見ているだけ:
+# 1. プロフィール未作成 → 自動生成（セットアップ不要）
+# 2. WebSearchでトレンド調査
+# 3. ファネル分析でトピック自動選択
+# 4. note / X / Instagram 向けコンテンツ同時生成
+# 5. 6軸品質採点（日本語ネイティブチェック含む）
+# 6. スコア70未満 → 自動改善（最大2ラウンド）
+# 7. HTMLダッシュボードがブラウザで自動表示
 ```
 
-## Quick Start
+**所要時間**: 約2-3分。**ユーザー操作**: 1コマンド。**生成物**: 3プラットフォーム分のコンテンツ + 品質レポート。
 
-```bash
-/setup-profile      # 初回セットアップ（7つの質問に答える）
-/daily-autopilot    # トレンド調査 → トピック選定 → コンテンツ生成 → 履歴記録まで全自動
+---
+
+## Demo Video
+
+[3分デモ動画](./DEMO_SCRIPT.md) — 撮影手順とナレーション台本
+
+---
+
+## 自律性の設計（Autonomy — 審査配点40%）
+
+Content Autopilotが自律的に下す判断の一覧:
+
+- **トピック選定**: WebSearchによるトレンド調査 + ファネルバランス分析で、何を書くべきかをシステムが決定
+- **品質の自己改善ループ**: 6軸採点でスコア70未満なら、具体的な修正指示を生成して自動改善（最大2ラウンド）
+- **フォールバック**: WebSearch失敗時はローカルのトピックライブラリから自動選択。外部依存でパイプラインは止まらない
+- **重複回避**: 同日に複数回実行した場合、自動サフィックスでファイル名を分離
+- **シリーズ継続追跡**: 進行中の連載がある場合、自動的に次回分を提案
+- **ファネル自動バランシング**: TOFU 50% / MOFU 30% / BOFU 20% の比率を履歴から自動計算し、最適なステージを選択
+- **プロフィール自動生成**: 初回実行時にプロフィールが存在しなければ、対話なしでデフォルト生成
+
+**「一度命じたら、あとは任せろ」を文字通り実現する。** ユーザーが離席しても、パイプラインは最後まで走り切る。
+
+---
+
+## 品質システム（Quality — 審査配点35%）
+
+### 6軸採点システム
+
+すべてのコンテンツは公開前に6つの軸で自動採点される:
+
+| 軸 | 評価内容 | 配点 |
+|---|---|---|
+| **Hook** | 冒頭3秒で読者を掴めるか | 20点 |
+| **Readability** | 読みやすさ・流れ | 20点 |
+| **Structure** | 論理構成・価値密度 | 20点 |
+| **Platform Fit** | プラットフォーム最適化 | 15点 |
+| **CTA** | 行動喚起の明確さ | 15点 |
+| **AI Smell** | AI臭の検出・人間らしさ | 10点 |
+
+### 日本語ネイティブチェック
+
+汎用的な品質チェックではなく、**日本語コンテンツに特化した**検証:
+
+- 漢字比率の適正チェック（多すぎると読みにくい、少なすぎるとカジュアルすぎる）
+- です/ます調の一貫性
+- 一文の長さ制限
+- 接続詞の適切な使用
+
+### プレパブリッシュ検証（8項目）
+
+品質採点とは別に、公開前の最終チェックリストを自動実行:
+
+- フォーマット整合性、リンク有効性、ハッシュタグ数、CTA存在確認、文字数制限、画像サイズ、メタデータ、法的コンプライアンス
+
+### 自動改善ループ
+
+スコアが閾値未満の場合、**何を直すべきかの具体的指示**を生成し、自動で修正を実行する。「スコアが低い」と報告するだけのシステムとは根本的に異なる。
+
+---
+
+## 129 Skills 一覧
+
+9カテゴリ、129スキル。すべてが連携し、一つのコンテンツOSとして機能する。
+
+| カテゴリ | スキル数 | 主要スキル |
+|---|---|---|
+| **Core Pipeline** | 6 | `daily-autopilot`, `content-writer`, `trend-scout`, `setup-profile`, `visual-creator`, `funnel-designer` |
+| **Analytics & Strategy** | 20 | `content-analytics`, `competitor-scout`, `series-designer`, `batch-generator`, `seo-optimizer`, `monetize-report` |
+| **Intelligence** | 20 | `content-dna`, `viral-reverse`, `algorithm-guide`, `smart-cta`, `brand-voice`, `trend-predictor` |
+| **Precision & QA** | 20 | `fact-checker`, `content-grader`, `pre-publish`, `readability-tuner`, `consistency-auditor`, `engagement-predictor` |
+| **Feedback Loop** | 10 | `performance-log`, `ab-test-runner`, `post-mortem`, `quality-benchmark`, `pipeline-view` |
+| **Content OS** | 10 | `skill-advisor`, `workflow-chain`, `mind-map`, `persuasion-framework`, `audience-simulator` |
+| **Products & Business** | 13 | `course-builder`, `book-proposal`, `revenue-forecast`, `launch-sequence`, `pricing-strategy` |
+| **Strategic Thinking** | 20 | `anti-content`, `compound-content`, `mirror-content`, `identity-architect`, `content-genome` |
+| **Adaptation & Learning** | 10 | `energy-adapter`, `smart-suggest`, `meta-learning`, `skill-composer`, `deep-audit` |
+
+---
+
+## アーキテクチャ
+
+AGI Lab Skills Marketplace 準拠のプラグイン構造:
+
+```
+content-autopilot/
+├── .claude-plugin/
+│   └── marketplace.json          # マーケットプレイス登録情報
+├── plugins/
+│   └── content-autopilot/
+│       ├── .claude-plugin/
+│       │   └── plugin.json       # プラグイン定義
+│       ├── skills/               # 129 skills (各 SKILL.md)
+│       │   ├── daily-autopilot/  # パイプラインオーケストレーター
+│       │   ├── content-writer/   # マルチプラットフォーム生成
+│       │   ├── trend-scout/      # トレンド調査
+│       │   ├── content-grader/   # 6軸品質採点
+│       │   └── ...               # 125 more skills
+│       └── scripts/              # 10 Python scripts
+│           ├── autopilot.py      # パイプライン制御 + 実行マニフェスト + 累積サマリー
+│           ├── grader.py         # 6軸品質採点エンジン
+│           ├── dashboard.py      # HTMLダッシュボード生成
+│           ├── pre_publish.py    # 8項目プレパブリッシュ検証
+│           ├── record_history.py # 履歴・シリーズ記録
+│           ├── init_data.py      # ゼロセットアップ初期化
+│           ├── data_manager.py   # 共通データI/O
+│           ├── analytics.py      # コンテンツ分析ダッシュボード
+│           ├── funnel_balance.py # ファネルバランス計算
+│           └── deep_audit.py     # システム整合性監査
+├── README.md
+└── LICENSE
 ```
 
-## 何ができるか
+### データフロー
 
-`/daily-autopilot` を実行すると:
-
-1. **トレンド調査** — WebSearchで最新トピックを3-4件提案（重複排除済み）
-2. **トピック選定** — ファネルバランス（TOFU/MOFU/BOFU）を考慮して推奨
-3. **コンテンツ生成** — note記事 + X thread + Instagram caption を一括生成
-4. **タイトル最適化** — ベストセラータイトルロジック（9カテゴリ）でA/Bテスト用タイトル記録
-5. **品質チェック** — 公開前チェックリスト + ブランドボイス一貫性
-6. **履歴記録** — content-history.jsonに自動追記（分析の基盤データ）
-
-**出力**: `~/Desktop/content-autopilot-output/` に保存
-
-## 入力と出力の例
-
-### `/daily-autopilot`
-
-入力: コマンドを実行するだけ（profile.jsonから自動読み込み）
-
-出力:
 ```
-~/Desktop/content-autopilot-output/
-  note_2026-03-21.md           # note記事（2,000-5,000文字）
-  x_2026-03-21.md              # Xスレッド（5-7ツイート）
-  instagram_2026-03-21.md      # Instagramキャプション + 30ハッシュタグ
-```
-
-### `/analytics`
-
-入力: コマンドを実行するだけ
-
-出力:
-```
-Content Analytics Dashboard
-  Posting: 45 posts | 6.2/week | 12-day streak
-  Funnel: TOFU 52% / MOFU 30% / BOFU 18%
-  Top logic: Numbers (40%) + Paradox (25%)
-  Recommendations: 3 specific action items
+profile.json ─────────────────────> autopilot.py
+                                        |
+WebSearch API ──> trend data ──────────>|
+content-history.json ──> funnel data ──>|
+                                        |
+                                        v
+                                  content-writer
+                                        |
+                                        v
+                               grader.py (6-axis)
+                                   |         |
+                              pass (>=70)  fail (<70)
+                                   |         |
+                                   |    auto-improve
+                                   |         |
+                                   v         v
+                              pre_publish.py
+                                        |
+                                        v
+                              record_history.py
+                                        |
+                                        v
+                              dashboard.py ──> HTML
 ```
 
-### `/suggest "Instagramを伸ばしたい"`
+---
 
-入力: やりたいことを自然言語で
+## インパクト（Impact — 審査配点25%）
 
-出力:
+### クリエイターだけではない、幅広い応用可能性
+
+Content Autopilotは特定の職種に限定されない。コンテンツ発信が必要なあらゆる人に価値を提供する:
+
+- **フリーランス・個人クリエイター** — 本業に集中しながらコンテンツ発信を自動化
+- **中小企業のマーケティング担当** — 少人数チームでも毎日の発信を維持
+- **副業でコンテンツ発信する会社員** — 限られた時間でも継続的なアウトプットを実現
+- **コンテンツマーケティングエージェンシー** — クライアント複数案件の並行運用を効率化
+
+### 解決する課題
+
+日本の個人クリエイター・スモールビジネスが直面する「コンテンツ継続の壁」:
+
+- **毎日のネタ探し**に30-60分 → **自動化で0分**
+- **3プラットフォーム別の書き分け**に2-3時間 → **1コマンドで同時生成**
+- **品質のばらつき**（疲れた日は質が落ちる）→ **6軸採点で品質を一定に保証**
+- **ファネル設計の挫折**（概念は知っていても実行が続かない）→ **自動バランシングで無意識に最適化**
+
+### 対象プラットフォーム
+
+| プラットフォーム | 生成コンテンツ |
+|---|---|
+| **note** | SEO最適化された長文記事（有料/無料） |
+| **X (Twitter)** | トレンドに乗るツイート・スレッド |
+| **Instagram** | ハッシュタグ最適化されたキャプション + カルーセルスクリプト |
+
+### ファネル戦略（DRM）
+
 ```
-Recommended skill chain:
-  1. /growth-hack instagram — 成長戦術
-  2. /hashtag "topic" — 最適30タグ
-  3. /carousel templates — カルーセル構造
-  4. /reels "topic" — Reels台本
+X / Instagram (TOFU)       note free (MOFU)        note paid (BOFU)
++------------------+     +------------------+     +------------------+
+|  Reach & Attract |---->|  Trust & Educate  |---->|  Convert & Earn  |
+|  30% of insight  |     |  80% of insight   |     |  100% + bonus    |
+|  Curiosity gap   |     |  Free articles    |     |  Paid articles   |
+|  CTA -> note     |     |  Lead magnet      |     |  Membership      |
++------------------+     +------------------+     +------------------+
 ```
 
-## 主要コマンド（129スキルから厳選）
+**ファネルバランスもシステムが自律管理。** TOFU/MOFU/BOFUの比率を履歴データから計算し、次に生成すべきステージを自動決定する。
 
-| コマンド | 何をするか |
-|---------|-----------|
-| `/setup-profile` | 初回セットアップ（テーマ、読者、スタイル、ファネル設定） |
-| `/daily-autopilot` | トレンド→選定→生成→記録のフルパイプライン |
-| `/batch 7` | 1週間分を一括生成 |
-| `/analytics` | コンテンツ分析ダッシュボード |
-| `/advisor` | 今何をすべきか全データから推奨 |
-| `/suggest "..."` | 自然言語→最適スキルチェーン |
-| `/grade` | 公開前品質スコア（0-100） |
-| `/dna` | 自分のコンテンツ成功パターン発見 |
-| `/trend-scout` | トレンドリサーチ + 3-4トピック提案 |
-| `/repurpose` | プラットフォーム間コンテンツ変換 |
-| `/competitor-scout` | 競合分析 + ギャップ発見 |
-| `/series 7` | 7日コンテンツシリーズ設計 |
-| `/launch` | 14日ローンチキャンペーン |
-| `/monetize` | 収益ダッシュボード |
-| `/energy low` | 疲れた日の軽量タスク推奨 |
-
-全129スキルの詳細は [plugins/content-autopilot/](./plugins/content-autopilot/) を参照。
-
-## 11レイヤー構成
-
-| Layer | Skills | What |
-|-------|--------|------|
-| Creation | 20 | 8プラットフォーム + 多形式 |
-| Optimization | 18 | SEO, CTA, アルゴリズム, 説得, ナラティブ |
-| Analysis | 16 | DNA, 予測, ベンチマーク, ROI, シミュレーション |
-| Distribution | 10 | カレンダー, バッチ, リサイクル, 保険 |
-| Growth | 12 | 競合, コラボ, チャレンジ, パートナーシップ |
-| Monetization | 10 | ファネル, 価格, ローンチ, 講座, 出版 |
-| Strategy | 15 | アイデンティティ, 裁定取引, セレンディピティ |
-| Precision | 10 | ファクトチェック, 一貫性, アクセシビリティ |
-| Feedback | 10 | パフォーマンス, A/B, ポストモーテム |
-| Self-Evolution | 8 | メタ学習, 異常検知, 精度レポート |
-| Human | 10 | エネルギー, 気分, マイルストーン |
+---
 
 ## Capability Levels
 
-| Level | Requirements | Features |
-|-------|-------------|----------|
-| **Level 1** | Claude Code + WebSearch | テキストコンテンツ全て |
-| **Level 2** | + gemini-image MCP | + 自動画像生成 |
-| **Level 3** | + X API credentials | + X自動投稿 |
+| Level | 要件 | 機能 |
+|---|---|---|
+| **Level 1** | Claude Code + WebSearch | テキストコンテンツ生成（全機能利用可能） |
+| **Level 2** | + gemini-image or fal.ai MCP | テキスト + 画像自動生成 |
+| **Level 3** | + X API credentials | テキスト + 画像 + X自動投稿 |
 
-## Demo
+---
 
-(動画準備中)
+## 出力ファイル
+
+```
+~/Desktop/content-autopilot-output/
+  note_2026-03-21.md              # note記事
+  x_2026-03-21.md                 # Xツイート/スレッド
+  instagram_2026-03-21.md         # Instagramキャプション + ハッシュタグ
+  dashboard.html                  # 品質ダッシュボード（自動生成）
+  note_ogp_2026-03-21.png         # note OGP画像 (Level 2+)
+
+~/.content-autopilot/
+  profile.json                    # ユーザープロフィール
+  content-history.json            # コンテンツ履歴（自動記録）
+  content-dna.json                # コンテンツ成功パターン
+  ...                             # 20+ データファイル
+```
+
+---
+
+## インストール
+
+Claude Code 内で以下を実行:
+
+```bash
+# marketplace として追加
+/plugin marketplace add FP-sudo/content-autopilot
+
+# plugin をインストール
+/plugin install content-autopilot@content-autopilot
+```
+
+インストール後、すぐに使えます:
+
+```bash
+# 全自律パイプラインを実行（セットアップ不要）
+/daily-autopilot
+```
+
+> プロフィール未作成でも自動生成されるため、初回から即実行可能です。
+> カスタマイズしたい場合は `/setup-profile` を実行してください。
+
+---
+
+## Demo Video
+
+[3分デモ動画撮影ガイド](./DEMO_SCRIPT.md) — ナレーション台本・操作手順・撮影Tips
+
+---
 
 ## License
 
