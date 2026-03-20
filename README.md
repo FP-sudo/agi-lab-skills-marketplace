@@ -1,173 +1,125 @@
-# AGI Lab Skills Marketplace
+# Content Autopilot
 
-AGIラボの plugin 集兼、AIエージェントハッカソン参加者向けの starter repo です。
+129-skill self-evolving content OS for Claude Code — note, X, Instagram, LinkedIn, YouTube, and more.
 
-この repo では 2 つの使い方があります。
+**1行で**: コンテンツクリエイターの「作る→分析→改善→再活用→成長」を全自動化するプラグイン。
 
-1. AGIラボの既存 plugin をインストールして試す
-2. `plugins/hackathon-starter/` を土台にして、自分の作品をそのまま提出できる形に育てる
-
-この README は、特に 2 の「ハッカソン参加者が迷わず提出まで進めること」を優先して書いています。
-
-## ハッカソン参加者はここから
-
-やることはシンプルです。
-
-1. この repo を fork する
-2. `plugins/hackathon-starter/` を自分の作品に合わせて書き換える
-3. README を「何ができる plugin か」がすぐ伝わる形に直す
-4. GitHub で公開して、デモ動画と一緒に提出する
-
-難しい仕組みを増やす必要はありません。
-まずは `1つの仕事を終わらせる skill` を、他の人が試せる形で置ければ十分です。
-
-## 提出までの一本道
-
-### 1. 何を作るかを 1 行で決める
-
-最初に決めるのは「誰の、どんな面倒を減らす skill なのか」です。
-
-例:
-
-- 営業後の議事メモから、次回提案メールの下書きを自動で作る
-- Discord の未回答質問を集めて、優先度付きで整理する
-- 毎朝のタスクと予定を見て、その日の実行順を提案する
-
-### 2. starter の中身を自分の作品に置き換える
-
-最低限、以下を直せば提出の土台になります。
-
-- `plugins/hackathon-starter/skills/starter-guide/SKILL.md`
-  - 自分の skill の説明、トリガー、入出力、ルールに書き換える
-- `plugins/hackathon-starter/.claude-plugin/plugin.json`
-  - plugin 名と説明文を自分の作品に合わせる
-- `.claude-plugin/marketplace.json`
-  - marketplace の説明と plugin 一覧を自分の提出内容に合わせる
-
-時間がなければ、フォルダ名まできれいに変えなくても構いません。
-まずは `install できる`、`説明が読める`、`動きが分かる` 状態を優先してください。
-
-### 3. README を提出用に整える
-
-README には、少なくとも次の 4 点があると迷いません。
-
-1. この plugin が何をしてくれるか
-2. どうやってインストールするか
-3. どういう入力で呼ぶと、何が返るか
-4. デモ動画やスクリーンショットへの導線
-
-審査する側は、README を読んですぐ試せるかをかなり見ます。
-
-### 4. 公開 GitHub repo とデモ動画を用意する
-
-提出時に最低限あるとよいものは次のとおりです。
-
-- 公開 GitHub repo
-- plugin 1 つ
-- 分かりやすい `SKILL.md` 1 つ
-- README
-- 3 分以内のデモ動画
-
-これで十分に提出できます。
-
-## まず触るファイル
-
-### `.claude-plugin/marketplace.json`
-
-repo 全体の marketplace 情報です。
-審査側が install するときの marketplace 名や、plugin 一覧がここに入ります。
-
-### `plugins/hackathon-starter/.claude-plugin/plugin.json`
-
-plugin 単位の名前と説明です。
-README を読む前に、この説明が一覧で見られることがあります。
-
-### `plugins/hackathon-starter/skills/starter-guide/SKILL.md`
-
-この repo の核です。
-最初は starter ですが、提出時にはここを自分の skill に置き換える前提です。
-
-### `README.md`
-
-審査側と他の参加者が最初に読む入口です。
-長くしすぎるより、「何ができるか」「どう試すか」がすぐ分かる方が強いです。
-
-## 審査する側が最初に見ること
-
-多くの場合、最初に確認されるのは次の流れです。
+## Install
 
 ```bash
-/plugin marketplace add <your-github-user>/<your-repo>
-/plugin install <your-plugin-name>@<your-marketplace-name>
+/plugin marketplace add fp-sudo/agi-lab-skills-marketplace
+/plugin install content-autopilot@agi-lab-skills
 ```
 
-ここで install できて、README を読めば使い方が分かる状態だと、作品の良さが伝わりやすくなります。
-
-## 最低限これなら提出できる
-
-次の条件を満たしていれば、十分提出ラインです。
-
-- public な GitHub repo がある
-- plugin が 1 つ入っている
-- `SKILL.md` が自分の作品内容に置き換わっている
-- README にセットアップと使い方が書いてある
-- デモ動画がある
-
-大きなフレームワークや複雑な構成は必須ではありません。
-まずは 1 つの体験を、最後まで試せる形で完成させるのが最優先です。
-
-## 既存 plugin を試したい人へ
-
-この repo は marketplace としても使えます。
+## Quick Start
 
 ```bash
-# In Claude Code
-/plugin marketplace add kaishushito/agi-lab-skills-marketplace
-/plugin install terminal-vibes@agi-lab-skills
+/setup-profile      # 初回セットアップ（7つの質問に答える）
+/daily-autopilot    # トレンド調査 → トピック選定 → コンテンツ生成 → 履歴記録まで全自動
 ```
 
-## 収録 plugin
+## 何ができるか
 
-### hackathon-starter
+`/daily-autopilot` を実行すると:
 
-ハッカソン参加者向けの最小 starter です。
-「まず 1 つ skill を形にして提出する」ための土台として使えます。
+1. **トレンド調査** — WebSearchで最新トピックを3-4件提案（重複排除済み）
+2. **トピック選定** — ファネルバランス（TOFU/MOFU/BOFU）を考慮して推奨
+3. **コンテンツ生成** — note記事 + X thread + Instagram caption を一括生成
+4. **タイトル最適化** — ベストセラータイトルロジック（9カテゴリ）でA/Bテスト用タイトル記録
+5. **品質チェック** — 公開前チェックリスト + ブランドボイス一貫性
+6. **履歴記録** — content-history.jsonに自動追記（分析の基盤データ）
 
-### terminal-vibes
+**出力**: `~/Desktop/content-autopilot-output/` に保存
 
-ターミナルで少し息抜きしたいときの遊び plugin です。
-ASCII ドーナツ、cat art、dad joke、Matrix rain などを試せます。
+## 入力と出力の例
 
-| Command | 内容 |
-|---------|------|
-| `/vibes` | ランダムで何か 1 つ表示 |
-| `/vibes donut` | 3D ASCII ドーナツ |
-| `/vibes cat` | ランダム ASCII cat art |
-| `/vibes joke` | プログラマー向け dad joke |
-| `/vibes matrix` | Matrix 風の文字列演出 |
-| `/vibes full show` | 全演目を順番に実行 |
+### `/daily-autopilot`
 
-必要環境: Python 3, Bash, ANSI 対応のターミナル
+入力: コマンドを実行するだけ（profile.jsonから自動読み込み）
 
-## Repository Structure
-
-```text
-.claude-plugin/
-└── marketplace.json
-
-plugins/
-├── hackathon-starter/
-│   ├── .claude-plugin/
-│   │   └── plugin.json
-│   └── skills/
-│       └── starter-guide/
-│           └── SKILL.md
-└── terminal-vibes/
-    ├── .claude-plugin/
-    │   └── plugin.json
-    ├── scripts/
-    └── skills/
+出力:
 ```
+~/Desktop/content-autopilot-output/
+  note_2026-03-21.md           # note記事（2,000-5,000文字）
+  x_2026-03-21.md              # Xスレッド（5-7ツイート）
+  instagram_2026-03-21.md      # Instagramキャプション + 30ハッシュタグ
+```
+
+### `/analytics`
+
+入力: コマンドを実行するだけ
+
+出力:
+```
+Content Analytics Dashboard
+  Posting: 45 posts | 6.2/week | 12-day streak
+  Funnel: TOFU 52% / MOFU 30% / BOFU 18%
+  Top logic: Numbers (40%) + Paradox (25%)
+  Recommendations: 3 specific action items
+```
+
+### `/suggest "Instagramを伸ばしたい"`
+
+入力: やりたいことを自然言語で
+
+出力:
+```
+Recommended skill chain:
+  1. /growth-hack instagram — 成長戦術
+  2. /hashtag "topic" — 最適30タグ
+  3. /carousel templates — カルーセル構造
+  4. /reels "topic" — Reels台本
+```
+
+## 主要コマンド（129スキルから厳選）
+
+| コマンド | 何をするか |
+|---------|-----------|
+| `/setup-profile` | 初回セットアップ（テーマ、読者、スタイル、ファネル設定） |
+| `/daily-autopilot` | トレンド→選定→生成→記録のフルパイプライン |
+| `/batch 7` | 1週間分を一括生成 |
+| `/analytics` | コンテンツ分析ダッシュボード |
+| `/advisor` | 今何をすべきか全データから推奨 |
+| `/suggest "..."` | 自然言語→最適スキルチェーン |
+| `/grade` | 公開前品質スコア（0-100） |
+| `/dna` | 自分のコンテンツ成功パターン発見 |
+| `/trend-scout` | トレンドリサーチ + 3-4トピック提案 |
+| `/repurpose` | プラットフォーム間コンテンツ変換 |
+| `/competitor-scout` | 競合分析 + ギャップ発見 |
+| `/series 7` | 7日コンテンツシリーズ設計 |
+| `/launch` | 14日ローンチキャンペーン |
+| `/monetize` | 収益ダッシュボード |
+| `/energy low` | 疲れた日の軽量タスク推奨 |
+
+全129スキルの詳細は [plugins/content-autopilot/](./plugins/content-autopilot/) を参照。
+
+## 11レイヤー構成
+
+| Layer | Skills | What |
+|-------|--------|------|
+| Creation | 20 | 8プラットフォーム + 多形式 |
+| Optimization | 18 | SEO, CTA, アルゴリズム, 説得, ナラティブ |
+| Analysis | 16 | DNA, 予測, ベンチマーク, ROI, シミュレーション |
+| Distribution | 10 | カレンダー, バッチ, リサイクル, 保険 |
+| Growth | 12 | 競合, コラボ, チャレンジ, パートナーシップ |
+| Monetization | 10 | ファネル, 価格, ローンチ, 講座, 出版 |
+| Strategy | 15 | アイデンティティ, 裁定取引, セレンディピティ |
+| Precision | 10 | ファクトチェック, 一貫性, アクセシビリティ |
+| Feedback | 10 | パフォーマンス, A/B, ポストモーテム |
+| Self-Evolution | 8 | メタ学習, 異常検知, 精度レポート |
+| Human | 10 | エネルギー, 気分, マイルストーン |
+
+## Capability Levels
+
+| Level | Requirements | Features |
+|-------|-------------|----------|
+| **Level 1** | Claude Code + WebSearch | テキストコンテンツ全て |
+| **Level 2** | + gemini-image MCP | + 自動画像生成 |
+| **Level 3** | + X API credentials | + X自動投稿 |
+
+## Demo
+
+(動画準備中)
 
 ## License
 

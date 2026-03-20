@@ -1,21 +1,24 @@
 {
   "name": "agi-lab-skills",
   "owner": {
-    "name": "AGI Lab",
-    "email": "kai@tempi.co.jp"
+    "name": "FP-sudo"
   },
   "metadata": {
-    "description": "AGIラボの plugin 集と、ハッカソン参加者向け starter template。",
-    "version": "1.1.0"
+    "description": "Content Autopilot — 129-skill self-evolving content OS for note, X, Instagram, LinkedIn, YouTube, and more.",
+    "version": "7.0.0"
   },
   "plugins": [
     {
-      "name": "hackathon-starter",
-      "source": "./plugins/hackathon-starter",
-      "description": "AGIラボハッカソン参加者向けの starter plugin。fork して、自分の skill に置き換えて公開・提出できます。",
-      "version": "0.1.0",
-      "category": "template",
-      "tags": ["starter", "template", "hackathon", "marketplace"]
+      "name": "content-autopilot",
+      "source": "./plugins/content-autopilot",
+      "description": "129-skill content automation OS: creation across 8 platforms, optimization, analytics, monetization, self-learning feedback loops, and human-adaptive features. One command to automate your entire content workflow.",
+      "version": "7.0.0",
+      "author": {
+        "name": "FP-sudo"
+      },
+      "license": "MIT",
+      "category": "content",
+      "tags": ["content", "sns", "automation", "note", "x", "instagram", "funnel", "monetization", "analytics", "ai"]
     },
     {
       "name": "terminal-vibes",
